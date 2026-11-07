@@ -12,7 +12,8 @@ from reportlab.lib.units import cm
 from reportlab.platypus import (Image, PageBreak, Paragraph, Preformatted,
                                 SimpleDocTemplate, Spacer)
 
-STUDENT_NAME = "ColumbinaSnowy"
+STUDENT_NAME = "Dongyu Ge"
+STUDENT_NUMBER = "20402504"
 GITHUB_LINK = "https://github.com/ColumbinaSnowy/Assignment1"
 AI_CHAT_LINK = "https://claude.ai/code/session_014yRSkwwWRBS2RYejMHn1up"
 
@@ -46,6 +47,7 @@ def photos(stem):
 
 story = [Paragraph("Codility Practice: Five Problems", styles["Title"]),
          Paragraph(f"Name: {STUDENT_NAME}", styles["Normal"]),
+         Paragraph(f"Student number: {STUDENT_NUMBER}", styles["Normal"]),
          Paragraph(f"GitHub repository: {GITHUB_LINK}", styles["Normal"]),
          Paragraph(f"AI conversation: {AI_CHAT_LINK}", styles["Normal"]),
          PageBreak()]
