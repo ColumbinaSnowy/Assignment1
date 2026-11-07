@@ -13,4 +13,4 @@
 
 ## Citations
 - Problem statements: Codility Lessons, https://app.codility.com/programmers/lessons/
-- AI tool: Claude (Anthropic), used to help draft the solutions and pseudocode. Conversation: <ADD LINK>
+- AI tool: Claude (Anthropic), used to help draft the solutions and pseudocode. Conversation: https://claude.ai/code/session_014yRSkwwWRBS2RYejMHn1up
