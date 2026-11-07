@@ -1,9 +1,10 @@
 """Build report.pdf: for each problem, the handwritten pseudocode photo,
 the commented Python code, citations and links.
 
-Put photos in pseudocode/ named frog_jmp.jpg, perm_check.jpg, ... (.jpg or .png)
-and fill in the two links below, then run:  python3 make_report.py
+Put photos in pseudocode/ named frog_jmp.jpg, perm_check.jpg, ... (.jpg or .png);
+use max_counters_1.jpg, max_counters_2.jpg, ... for multi-page pseudocode, then run:  python3 make_report.py
 """
+import glob
 import os
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
@@ -11,9 +12,9 @@ from reportlab.lib.units import cm
 from reportlab.platypus import (Image, PageBreak, Paragraph, Preformatted,
                                 SimpleDocTemplate, Spacer)
 
-STUDENT_NAME = "[Your Name]"
-GITHUB_LINK = "[https://github.com/your-username/codility-solutions]"
-AI_CHAT_LINK = "[link to this AI conversation]"
+STUDENT_NAME = "ColumbinaSnowy"
+GITHUB_LINK = "https://github.com/ColumbinaSnowy/Assignment1"
+AI_CHAT_LINK = "https://claude.ai/code/session_014yRSkwwWRBS2RYejMHn1up"
 
 PROBLEMS = [
     ("FrogJmp", "frog_jmp", "3-time_complexity/frog_jmp"),
@@ -28,15 +29,19 @@ code_style = styles["Code"].clone("code", fontSize=7.5, leading=9.5)
 here = os.path.dirname(os.path.abspath(__file__))
 
 
-def photo(stem):
-    for ext in (".jpg", ".jpeg", ".png"):
-        path = os.path.join(here, "pseudocode", stem + ext)
-        if os.path.exists(path):
-            img = Image(path)
-            scale = min(16 * cm / img.imageWidth, 11 * cm / img.imageHeight)
-            img.drawWidth, img.drawHeight = img.imageWidth * scale, img.imageHeight * scale
-            return img
-    return Paragraph(f"<i>[Add pseudocode/{stem}.jpg]</i>", styles["Normal"])
+def photos(stem):
+    """Return the pseudocode photo(s) for a problem: stem.jpg, or stem_1.jpg, stem_2.jpg, ..."""
+    paths = sorted(p for p in glob.glob(os.path.join(here, "pseudocode", stem + "*"))
+                   if p.lower().endswith((".jpg", ".jpeg", ".png")))
+    if not paths:
+        return [Paragraph(f"<i>[Add pseudocode/{stem}.jpg]</i>", styles["Normal"])]
+    images = []
+    for path in paths:
+        img = Image(path)
+        scale = min(15 * cm / img.imageWidth, 20 * cm / img.imageHeight)
+        img.drawWidth, img.drawHeight = img.imageWidth * scale, img.imageHeight * scale
+        images.append(img)
+    return images
 
 
 story = [Paragraph("Codility Practice: Five Problems", styles["Title"]),
@@ -51,11 +56,11 @@ for i, (title, stem, path) in enumerate(PROBLEMS, 1):
         code = f.read()
     story += [Paragraph(f"{i}. {title}", styles["Heading1"]),
               Paragraph(f"Problem: {url}", styles["Normal"]),
-              Paragraph("1. Handwritten pseudocode", styles["Heading3"]), photo(stem),
-              Paragraph("2. Python code", styles["Heading3"]), Preformatted(code, code_style),
+              Paragraph("1. Handwritten pseudocode", styles["Heading3"]), *photos(stem),
+              PageBreak(), Paragraph("2. Python code", styles["Heading3"]), Preformatted(code, code_style),
               Paragraph("3. Citations", styles["Heading3"]),
               Paragraph(f"Problem statement: Codility Lessons, {url}<br/>"
-                        "AI tool: Claude (Anthropic), used to help draft the solution and pseudocode.",
+                        "AI tool: Claude Code (Anthropic), used to help draft the solution and pseudocode.",
                         styles["Normal"]),
               Paragraph("4. Links", styles["Heading3"]),
               Paragraph(f"GitHub: {GITHUB_LINK}<br/>AI conversation: {AI_CHAT_LINK}", styles["Normal"]),

@@ -28,7 +28,7 @@ FUNCTION MissingInteger(A)
     N ← length of A
     present ← array of N+2 values, all FALSE
     FOR each value IN A
-        IF 1 ≤ value ≤ N+1 THEN present[value] ← TRUE
+        IF 1 ≤ value ≤ N THEN present[value] ← TRUE
     END FOR
     FOR k ← 1 TO N+1
         IF present[k] = FALSE THEN RETURN k
